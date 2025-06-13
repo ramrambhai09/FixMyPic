@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FixMyPic</title>
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --secondary: #166088;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --bg-color: #f5f7fa;
+      --text-color: #343a40;
+      --panel-bg: #ffffff;
+      --panel-border: #e9ecef;
+      --header-bg: linear-gradient(135deg, var(--primary), var(--secondary));
+      --placeholder-color: #999;
+      --success: #28a745;
+      --info: #17a2b8;
+      --warning: #ffc107;
+      --danger: #dc3545;
+    }
+
+    .dark-mode {
+      --bg-color: #1a1a1a;
+      --text-color: #f8f9fa;
+      --panel-bg: #2d2d2d;
+      --panel-border: #444;
+      --header-bg: linear-gradient(135deg, #2c3e50, #4a6fa5);
+      --placeholder-color: #aaa;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 0;
+      background: var(--header-bg);
+      color: white;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+    }
+
+    .app-description {
+      max-width: 600px;
+      margin: 10px auto 0;
+      opacity: 0.9;
+    }
+
+    .app-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .app-container {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .app-description {
+        font-size: 0.9rem;
+      }
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border: 1px solid var(--panel-border);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .panel-title {
+      margin-top: 0;
+      color: var(--primary);
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 10px;
+      transition: border-color 0.3s ease;
+    }
+
+    .image-container {
+      width: 100%;
+      height: 300px;
+      border: 2px dashed var(--panel-border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      overflow: hidden;
+      position: relative;
+      transition: border-color 0.3s ease;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    input[type="file"] {
+      padding: 10px;
+      border: 1px solid var(--panel-border);
+      border-radius: 5px;
+      background: var(--panel-bg);
+      color: var(--text-color);
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    input[type="color"] {
+      width: 100%;
+      height: 40px;
+      border: 1px solid var(--panel-border);
+      border-radius: 5px;
+      cursor: pointer;
+      background: var(--panel-bg);
+    }
+
+    select {
+      padding: 10px;
+      border: 1px solid var(--panel-border);
+      border-radius: 5px;
+      background: var(--panel-bg);
+      color: var(--text-color);
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .circle-btn {
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 5px;
+    }
+
+    .circle-btn i {
+      font-size: 20px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    button:hover {
+      background-color: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .download-btn {
+      display: inline-block;
+      background-color: #28a745;
+      color: white;
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-align: center;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .download-btn:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      border-radius: 6px;
+    }
+
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top: 4px solid white;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .placeholder-text {
+      color: var(--placeholder-color);
+      text-align: center;
+      padding: 20px;
+      transition: color 0.3s ease;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.1);
+    }
+
+    .theme-toggle i {
+      color: white;
+      font-size: 20px;
+    }
+
+    /* Features dropdown */
+    .features-dropdown {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+
+    .features-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .features-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .features-btn i {
+      font-size: 16px;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 200px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      z-index: 1;
+      border-radius: 5px;
+      overflow: hidden;
+      left: 0;
+      top: 100%;
+    }
+
+    .dark-mode .dropdown-content {
+      background-color: #2d2d2d;
+    }
+
+    .dropdown-content a {
+      color: var(--dark);
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      transition: background-color 0.3s;
+    }
+
+    .dark-mode .dropdown-content a {
+      color: var(--light);
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .dark-mode .dropdown-content a:hover {
+      background-color: #444;
+    }
+
+    .features-dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    /* Feature pages */
+    .feature-page {
+      display: none;
+    }
+
+    .feature-page.active {
+      display: block;
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 50px;
+      color: white;
+      background-color: var(--info);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      z-index: 1000;
+      transform: translateX(200%);
+      transition: transform 0.3s ease;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    .notification i {
+      margin-right: 10px;
+      font-size: 20px;
+    }
+
+    .notification.success {
+      background-color: var(--success);
+    }
+
+    .notification.error {
+      background-color: var(--danger);
+    }
+
+    .notification.warning {
+      background-color: var(--warning);
+      color: var(--dark);
+    }
+
+    /* Slider controls */
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .slider-container input[type="range"] {
+      flex-grow: 1;
+      height: 10px;
+      -webkit-appearance: none;
+      background: #ddd;
+      border-radius: 5px;
+    }
+
+    .slider-container input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .slider-container span {
+      min-width: 40px;
+      text-align: center;
+    }
+
+    /* Mobile specific styles */
+    @media (max-width: 480px) {
+      .container {
+        padding: 10px;
+      }
+      
+      header {
+        padding: 20px 0;
+        border-radius: 0;
+      }
+      
+      .panel {
+        padding: 15px;
+      }
+      
+      .image-container {
+        height: 250px;
+      }
+      
+      button, .download-btn {
+        padding: 10px 15px;
+      }
+      
+      .theme-toggle, .features-dropdown {
+        top: 10px;
+      }
+      
+      .theme-toggle {
+        right: 10px;
+        width: 35px;
+        height: 35px;
+      }
+      
+      .features-btn {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+      
+      .dropdown-content {
+        min-width: 180px;
+      }
+      
+      .circle-btn {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    /* Cropper styles */
+    .crop-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      margin-bottom: 20px;
+    }
+
+    .crop-area {
+      position: absolute;
+      border: 2px dashed rgba(255,255,255,0.8);
+      box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+      z-index: 1;
+      cursor: move;
+    }
+
+    .crop-handle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: white;
+      border: 2px solid var(--primary);
+      z-index: 2;
+    }
+
+    .handle-nw { top: -5px; left: -5px; cursor: nw-resize; }
+    .handle-ne { top: -5px; right: -5px; cursor: ne-resize; }
+    .handle-sw { bottom: -5px; left: -5px; cursor: sw-resize; }
+    .handle-se { bottom: -5px; right: -5px; cursor: se-resize; }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="features-dropdown">
+        <button class="features-btn">
+          <i class="fas fa-cog"></i> Features
+        </button>
+        <div class="dropdown-content">
+          <a href="#" onclick="showFeature('passportPhoto')">Passport Photo</a>
+          <a href="#" onclick="showFeature('signature')">Signature Tool</a>
+          <a href="#" onclick="showFeature('bgRemover')">Background Remover</a>
+          <a href="#" onclick="showFeature('sizeReducer')">Image Size Reducer</a>
+        </div>
+      </div>
+      
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+      </button>
+      <h1 id="pageTitle">Passport Photo Tool</h1>
+      <p class="app-description" id="pageDescription">Upload your photo to create perfect passport photos</p>
+    </div>
+  </header>
+  
+  <div class="container">
+    <!-- Passport Photo Feature -->
+    <div id="passportPhoto" class="feature-page active">
+      <div class="app-container">
+        <div class="panel">
+          <h2 class="panel-title">Original Image</h2>
+          <div class="image-container" id="passportOriginalContainer">
+            <p class="placeholder-text">Upload your photo for passport size</p>
+            <img id="passportOriginalImage" class="hidden">
+          </div>
+          <div class="controls">
+            <div class="control-group">
+              <label for="passportUpload">Upload Image</label>
+              <input type="file" id="passportUpload" accept="image/*">
+            </div>
+            <div class="control-group">
+              <label for="passportSize">Passport Size</label>
+              <select id="passportSize">
+                <option value="2x2">2x2 inches (USA, India)</option>
+                <option value="35x45">3.5x4.5 cm (Standard)</option>
+                <option value="5x36">5x3.6 cm (Other)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel">
+          <h2 class="panel-title">Passport Photo</h2>
+          <div class="image-container" id="passportResultContainer">
+            <p class="placeholder-text">Your passport photo will appear here</p>
+            <img id="passportResultImage" class="hidden">
+            <div id="passportLoading" class="loading hidden">
+              <div class="spinner"></div>
+            </div>
+          </div>
+          
+          <div class="btn-group">
+            <button class="circle-btn" title="Move Up" onclick="adjustImage('passport', 'up')">
+              <i class="fas fa-arrow-up"></i>
+            </button>
+            <button class="circle-btn" title="Move Down" onclick="adjustImage('passport', 'down')">
+              <i class="fas fa-arrow-down"></i>
+            </button>
+            <button class="circle-btn" title="Move Left" onclick="adjustImage('passport', 'left')">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <button class="circle-btn" title="Move Right" onclick="adjustImage('passport', 'right')">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="circle-btn" title="Zoom In" onclick="adjustImage('passport', 'zoomin')">
+              <i class="fas fa-search-plus"></i>
+            </button>
+            <button class="circle-btn" title="Zoom Out" onclick="adjustImage('passport', 'zoomout')">
+              <i class="fas fa-search-minus"></i>
+            </button>
+            <button class="circle-btn" title="Rotate Left" onclick="adjustImage('passport', 'rotateleft')">
+              <i class="fas fa-undo"></i>
+            </button>
+            <button class="circle-btn" title="Rotate Right" onclick="adjustImage('passport', 'rotateright')">
+              <i class="fas fa-redo"></i>
+            </button>
+          </div>
+          
+          <div class="controls">
+            <button id="passportProcessBtn" onclick="processPassportPhoto()" disabled>Create Passport Photo</button>
+            <div class="control-group">
+              <label>
+                <input type="checkbox" id="passportWhiteBg" checked>
+                Auto white background
+              </label>
+            </div>
+            <a id="passportDownloadBtn" class="download-btn hidden" download="passport-photo.png">Download Passport Photo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Signature Feature -->
+    <div id="signature" class="feature-page">
+      <div class="app-container">
+        <div class="panel">
+          <h2 class="panel-title">Original Signature</h2>
+          <div class="image-container" id="signatureOriginalContainer">
+            <p class="placeholder-text">Upload your signature</p>
+            <img id="signatureOriginalImage" class="hidden">
+          </div>
+          <div class="controls">
+            <div class="control-group">
+              <label for="signatureUpload">Upload Image</label>
+              <input type="file" id="signatureUpload" accept="image/*">
+            </div>
+            <div class="control-group">
+              <label for="signatureSize">Signature Size</label>
+              <select id="signatureSize">
+                <option value="25x75">2.5x7.5 cm (Standard)</option>
+                <option value="custom">Custom Size</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel">
+          <h2 class="panel-title">Signature Result</h2>
+          <div class="image-container" id="signatureResultContainer">
+            <p class="placeholder-text">Your processed signature will appear here</p>
+            <img id="signatureResultImage" class="hidden">
+          </div>
+          
+          <div class="btn-group">
+            <button class="circle-btn" title="Move Up" onclick="adjustImage('signature', 'up')">
+              <i class="fas fa-arrow-up"></i>
+            </button>
+            <button class="circle-btn" title="Move Down" onclick="adjustImage('signature', 'down')">
+              <i class="fas fa-arrow-down"></i>
+            </button>
+            <button class="circle-btn" title="Move Left" onclick="adjustImage('signature', 'left')">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <button class="circle-btn" title="Move Right" onclick="adjustImage('signature', 'right')">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="circle-btn" title="Zoom In" onclick="adjustImage('signature', 'zoomin')">
+              <i class="fas fa-search-plus"></i>
+            </button>
+            <button class="circle-btn" title="Zoom Out" onclick="adjustImage('signature', 'zoomout')">
+              <i class="fas fa-search-minus"></i>
+            </button>
+            <button class="circle-btn" title="Rotate Left" onclick="adjustImage('signature', 'rotateleft')">
+              <i class="fas fa-undo"></i>
+            </button>
+            <button class="circle-btn" title="Rotate Right" onclick="adjustImage('signature', 'rotateright')">
+              <i class="fas fa-redo"></i>
+            </button>
+          </div>
+          
+          <div class="controls">
+            <button id="signatureProcessBtn" onclick="processSignature()" disabled>Process Signature</button>
+            <div class="control-group">
+              <label>
+                <input type="checkbox" id="signatureWhiteBg" checked>
+                Auto white background
+              </label>
+            </div>
+            <a id="signatureDownloadBtn" class="download-btn hidden" download="signature.png">Download Signature</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Background Remover Feature -->
+    <div id="bgRemover" class="feature-page">
+      <div class="app-container">
+        <div class="panel">
+          <h2 class="panel-title">Original Image</h2>
+          <div class="image-container" id="originalContainer">
+            <p class="placeholder-text">Your uploaded image will appear here</p>
+            <img id="originalImage" class="hidden">
+          </div>
+          <div class="controls">
+            <div class="control-group">
+              <label for="upload">Upload Image</label>
+              <input type="file" id="upload" accept="image/*">
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel">
+          <h2 class="panel-title">Result</h2>
+          <div class="image-container" id="resultContainer">
+            <p class="placeholder-text">Your processed image will appear here</p>
+            <img id="resultImage" class="hidden">
+            <div id="loading" class="loading hidden">
+              <div class="spinner"></div>
+            </div>
+          </div>
+          <div class="controls">
+            <div class="control-group">
+              <label for="bgType">Background Type</label>
+              <select id="bgType" onchange="toggleBackgroundOptions()">
+                <option value="color">Solid Color</option>
+                <option value="image">Custom Image</option>
+                <option value="transparent">Transparent</option>
+              </select>
+            </div>
+            
+            <div class="control-group" id="colorOption">
+              <label for="bgColor">Choose Background Color</label>
+              <input type="color" id="bgColor" value="#ffffff">
+            </div>
+            
+            <div class="control-group hidden" id="imageOption">
+              <label for="bgImageUpload">Upload Background Image</label>
+              <input type="file" id="bgImageUpload" accept="image/*">
+            </div>
+            
+            <button id="processBtn" onclick="processImage()" disabled>Remove Background</button>
+            <a id="downloadBtn" class="download-btn hidden" download="no-bg-image.png">Download Result</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Size Reducer Feature -->
+    <div id="sizeReducer" class="feature-page">
+      <div class="app-container">
+        <div class="panel">
+          <h2 class="panel-title">Original Image</h2>
+          <div class="image-container" id="reducerOriginalContainer">
+            <p class="placeholder-text">Upload image to reduce file size</p>
+            <img id="reducerOriginalImage" class="hidden">
+            <div class="control-group">
+              <label id="originalSize">Original size: 0 KB</label>
+            </div>
+          </div>
+          <div class="controls">
+            <div class="control-group">
+              <label for="reducerUpload">Upload Image</label>
+              <input type="file" id="reducerUpload" accept="image/*">
+            </div>
+            <div class="control-group">
+              <label for="qualityRange">Quality: <span id="qualityValue">70</span>%</label>
+              <div class="slider-container">
+                <input type="range" id="qualityRange" min="1" max="100" value="70">
+                <span id="qualityValueDisplay">70</span>
+              </div>
+            </div>
+            <button id="reducerProcessBtn" onclick="reduceImageSize()" disabled>Reduce Image Size</button>
+          </div>
+        </div>
+        
+        <div class="panel">
+          <h2 class="panel-title">Reduced Image</h2>
+          <div class="image-container" id="reducerResultContainer">
+            <p class="placeholder-text">Your reduced image will appear here</p>
+            <img id="reducerResultImage" class="hidden">
+            <div class="control-group">
+              <label id="reducedSize">Reduced size: 0 KB</label>
+            </div>
+            <div id="reducerLoading" class="loading hidden">
+              <div class="spinner"></div>
+            </div>
+          </div>
+          <a id="reducerDownloadBtn" class="download-btn hidden" download="reduced-image.jpg">Download Reduced Image</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div id="notification" class="notification">
+    <i class="fas fa-info-circle"></i>
+    <span id="notificationText">Notification message</span>
+  </div>
+
+  <script>
+    // DOM elements
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    let darkMode = localStorage.getItem('darkMode') === 'true';
+    
+    // Initialize theme
+    updateTheme();
+    
+    // Theme toggle
+    themeToggle.addEventListener('click', () => {
+      darkMode = !darkMode;
+      localStorage.setItem('darkMode', darkMode);
+      updateTheme();
+    });
+    
+    function updateTheme() {
+      if (darkMode) {
+        document.body.classList.add('dark-mode');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+      } else {
+        document.body.classList.remove('dark-mode');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+      }
+    }
+    
+    // Notification system
+    function showNotification(message, type = 'info', duration = 3000) {
+      const notification = document.getElementById('notification');
+      const notificationText = document.getElementById('notificationText');
+      
+      notification.className = 'notification';
+      notification.classList.add(type);
+      notificationText.textContent = message;
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, duration);
+    }
+    
+    // Feature navigation
+    function showFeature(featureId) {
+      // Hide all feature pages
+      document.querySelectorAll('.feature-page').forEach(page => {
+        page.classList.remove('active');
+      });
+      
+      // Show selected feature
+      document.getElementById(featureId).classList.add('active');
+      
+      // Update page title and description
+      const titles = {
+        passportPhoto: "Passport Photo Tool",
+        signature: "Signature Tool",
+        bgRemover: "Background Remover",
+        sizeReducer: "Image Size Reducer"
+      };
+      
+      const descriptions = {
+        passportPhoto: "Upload your photo to create perfect passport photos",
+        signature: "Upload your signature to resize and adjust it",
+        bgRemover: "Remove background from your images",
+        sizeReducer: "Reduce image file size while maintaining quality"
+      };
+      
+      document.getElementById('pageTitle').textContent = titles[featureId];
+      document.getElementById('pageDescription').textContent = descriptions[featureId];
+    }
+    
+    // Passport Photo Feature
+    const passportUpload = document.getElementById('passportUpload');
+    const passportOriginalImage = document.getElementById('passportOriginalImage');
+    const passportOriginalContainer = document.getElementById('passportOriginalContainer');
+    const passportResultImage = document.getElementById('passportResultImage');
+    const passportResultContainer = document.getElementById('passportResultContainer');
+    const passportProcessBtn = document.getElementById('passportProcessBtn');
+    const passportDownloadBtn = document.getElementById('passportDownloadBtn');
+    const passportLoading = document.getElementById('passportLoading');
+    const passportSizeSelect = document.getElementById('passportSize');
+    const passportWhiteBg = document.getElementById('passportWhiteBg');
+    
+    let passportImg = null;
+    let passportAdjustment = {
+      x: 0,
+      y: 0,
+      scale: 1,
+      rotation: 0
+    };
+    
+    passportUpload.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        passportOriginalImage.src = event.target.result;
+        passportOriginalImage.classList.remove('hidden');
+        passportOriginalContainer.querySelector('.placeholder-text').classList.add('hidden');
+        passportProcessBtn.disabled = false;
+        
+        // Store the original image
+        passportImg = new Image();
+        passportImg.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    
+    function adjustImage(type, action) {
+      const adjustment = type === 'passport' ? passportAdjustment : signatureAdjustment;
+      
+      switch(action) {
+        case 'up':
+          adjustment.y -= 10;
+          break;
+        case 'down':
+          adjustment.y += 10;
+          break;
+        case 'left':
+          adjustment.x -= 10;
+          break;
+        case 'right':
+          adjustment.x += 10;
+          break;
+        case 'zoomin':
+          adjustment.scale *= 1.1;
+          break;
+        case 'zoomout':
+          adjustment.scale *= 0.9;
+          break;
+        case 'rotateleft':
+          adjustment.rotation -= 5;
+          break;
+        case 'rotateright':
+          adjustment.rotation += 5;
+          break;
+      }
+      
+      if (type === 'passport') {
+        updatePassportPhoto();
+      } else {
+        updateSignature();
+      }
+    }
+    
+    function updatePassportPhoto() {
+      if (!passportImg) return;
+      
+      // Get selected size
+      const size = passportSizeSelect.value;
+      let width, height;
+      
+      switch(size) {
+        case '2x2':
+          // 2x2 inches at 300 DPI (600x600 pixels)
+          width = 600;
+          height = 600;
+          break;
+        case '35x45':
+          // 3.5x4.5 cm at 300 DPI (413x531 pixels)
+          width = Math.round(3.5 * 118.11);
+          height = Math.round(4.5 * 118.11);
+          break;
+        case '5x36':
+          // 5x3.6 cm at 300 DPI (591x425 pixels)
+          width = Math.round(5 * 118.11);
+          height = Math.round(3.6 * 118.11);
+          break;
+        default:
+          width = 600;
+          height = 600;
+      }
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      
+      // Fill with white background if checked
+      if (passportWhiteBg.checked) {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, width, height);
+      }
+      
+      // Calculate aspect ratio and position
+      const imgAspect = passportImg.width / passportImg.height;
+      const passportAspect = width / height;
+      
+      let drawWidth, drawHeight, x, y;
+      
+      if (imgAspect > passportAspect) {
+        // Image is wider than passport aspect
+        drawHeight = height;
+        drawWidth = height * imgAspect;
+        x = (width - drawWidth) / 2;
+        y = 0;
+      } else {
+        // Image is taller than passport aspect
+        drawWidth = width;
+        drawHeight = width / imgAspect;
+        x = 0;
+        y = (height - drawHeight) / 2;
+      }
+      
+      // Apply the adjustments
+      ctx.save();
+      ctx.translate(width / 2, height / 2);
+      ctx.rotate(passportAdjustment.rotation * Math.PI / 180);
+      ctx.scale(passportAdjustment.scale, passportAdjustment.scale);
+      ctx.translate(-width / 2 + passportAdjustment.x, -height / 2 + passportAdjustment.y);
+      
+      ctx.drawImage(passportImg, x, y, drawWidth, drawHeight);
+      ctx.restore();
+      
+      passportResultImage.src = canvas.toDataURL('image/png');
+      passportResultImage.classList.remove('hidden');
+      passportDownloadBtn.href = canvas.toDataURL('image/png');
+      passportDownloadBtn.classList.remove('hidden');
+    }
+    
+    function processPassportPhoto() {
+      if (!passportImg) {
+        showNotification("Please upload an image first", "error");
+        return;
+      }
+      
+      passportLoading.classList.remove('hidden');
+      passportResultImage.classList.add('hidden');
+      passportResultContainer.querySelector('.placeholder-text').classList.add('hidden');
+      
+      // Reset adjustments
+      passportAdjustment = {
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotation: 0
+      };
+      
+      // Process the image
+      setTimeout(() => {
+        updatePassportPhoto();
+        passportLoading.classList.add('hidden');
+        showNotification("Passport photo created successfully!", "success");
+      }, 100);
+    }
+    
+    // Signature Feature
+    const signatureUpload = document.getElementById('signatureUpload');
+    const signatureOriginalImage = document.getElementById('signatureOriginalImage');
+    const signatureOriginalContainer = document.getElementById('signatureOriginalContainer');
+    const signatureResultImage = document.getElementById('signatureResultImage');
+    const signatureResultContainer = document.getElementById('signatureResultContainer');
+    const signatureProcessBtn = document.getElementById('signatureProcessBtn');
+    const signatureDownloadBtn = document.getElementById('signatureDownloadBtn');
+    const signatureSizeSelect = document.getElementById('signatureSize');
+    const signatureWhiteBg = document.getElementById('signatureWhiteBg');
+    
+    let signatureImg = null;
+    let signatureAdjustment = {
+      x: 0,
+      y: 0,
+      scale: 1,
+      rotation: 0
+    };
+    
+    signatureUpload.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        signatureOriginalImage.src = event.target.result;
+        signatureOriginalImage.classList.remove('hidden');
+        signatureOriginalContainer.querySelector('.placeholder-text').classList.add('hidden');
+        signatureProcessBtn.disabled = false;
+        
+        // Store the original image
+        signatureImg = new Image();
+        signatureImg.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    
+    function updateSignature() {
+      if (!signatureImg) return;
+      
+      // Get selected size
+      const size = signatureSizeSelect.value;
+      let width, height;
+      
+      if (size === '25x75') {
+        // 2.5x7.5 cm at 300 DPI (295x886 pixels)
+        width = Math.round(2.5 * 118.11);
+        height = Math.round(7.5 * 118.11);
+      } else {
+        // Custom size - use original aspect ratio
+        const aspect = signatureImg.width / signatureImg.height;
+        width = signatureImg.width;
+        height = signatureImg.height;
+      }
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      
+      // Fill with white background if checked
+      if (signatureWhiteBg.checked) {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, width, height);
+      }
+      
+      // Calculate aspect ratio and position
+      const imgAspect = signatureImg.width / signatureImg.height;
+      const signatureAspect = width / height;
+      
+      let drawWidth, drawHeight, x, y;
+      
+      if (imgAspect > signatureAspect) {
+        // Image is wider than signature aspect
+        drawHeight = height;
+        drawWidth = height * imgAspect;
+        x = (width - drawWidth) / 2;
+        y = 0;
+      } else {
+        // Image is taller than signature aspect
+        drawWidth = width;
+        drawHeight = width / imgAspect;
+        x = 0;
+        y = (height - drawHeight) / 2;
+      }
+      
+      // Apply the adjustments
+      ctx.save();
+      ctx.translate(width / 2, height / 2);
+      ctx.rotate(signatureAdjustment.rotation * Math.PI / 180);
+      ctx.scale(signatureAdjustment.scale, signatureAdjustment.scale);
+      ctx.translate(-width / 2 + signatureAdjustment.x, -height / 2 + signatureAdjustment.y);
+      
+      ctx.drawImage(signatureImg, x, y, drawWidth, drawHeight);
+      ctx.restore();
+      
+      signatureResultImage.src = canvas.toDataURL('image/png');
+      signatureResultImage.classList.remove('hidden');
+      signatureDownloadBtn.href = canvas.toDataURL('image/png');
+      signatureDownloadBtn.classList.remove('hidden');
+    }
+    
+    function processSignature() {
+      if (!signatureImg) {
+        showNotification("Please upload a signature first", "error");
+        return;
+      }
+      
+      // Reset adjustments
+      signatureAdjustment = {
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotation: 0
+      };
+      
+      // Process the signature
+      updateSignature();
+      showNotification("Signature processed successfully!", "success");
+    }
+    
+    // Background Remover Feature
+    const uploadInput = document.getElementById('upload');
+    const originalImage = document.getElementById('originalImage');
+    const originalContainer = document.getElementById('originalContainer');
+    const resultImage = document.getElementById('resultImage');
+    const resultContainer = document.getElementById('resultContainer');
+    const processBtn = document.getElementById('processBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const loading = document.getElementById('loading');
+    const bgTypeSelect = document.getElementById('bgType');
+    const colorOption = document.getElementById('colorOption');
+    const imageOption = document.getElementById('imageOption');
+    const bgColorInput = document.getElementById('bgColor');
+    const bgImageUpload = document.getElementById('bgImageUpload');
+    
+    let originalImgData = null;
+    let bgImage = null;
+    
+    uploadInput.addEventListener('change', handleImageUpload);
+    bgImageUpload.addEventListener('change', handleBackgroundImageUpload);
+    
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        originalImage.src = event.target.result;
+        originalImage.classList.remove('hidden');
+        originalContainer.querySelector('.placeholder-text').classList.add('hidden');
+        originalImgData = event.target.result;
+        processBtn.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
+    
+    function handleBackgroundImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        bgImage = new Image();
+        bgImage.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+    
+    function toggleBackgroundOptions() {
+      const bgType = bgTypeSelect.value;
+      
+      if (bgType === 'color') {
+        colorOption.classList.remove('hidden');
+        imageOption.classList.add('hidden');
+      } else if (bgType === 'image') {
+        colorOption.classList.add('hidden');
+        imageOption.classList.remove('hidden');
+      } else {
+        colorOption.classList.add('hidden');
+        imageOption.classList.add('hidden');
+      }
+    }
+    
+    async function processImage() {
+      if (!originalImgData) {
+        showNotification("Please upload an image first", "error");
+        return;
+      }
+      
+      loading.classList.remove('hidden');
+      resultImage.classList.add('hidden');
+      resultContainer.querySelector('.placeholder-text').classList.add('hidden');
+      
+      try {
+        const formData = new FormData();
+        formData.append('image_file', uploadInput.files[0]);
+        formData.append('size', 'auto');
+        
+        const response = await fetch("https://api.remove.bg/v1.0/removebg", {
+          method: "POST",
+          headers: {
+            "X-Api-Key": "LDwCT4cFCDUeyaM6HJXdax91"
+          },
+          body: formData
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Background removal failed! Status: ${response.status}`);
+        }
+        
+        const blob = await response.blob();
+        const noBgImg = new Image();
+        noBgImg.src = URL.createObjectURL(blob);
+        
+        noBgImg.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = noBgImg.width;
+          canvas.height = noBgImg.height;
+          
+          const bgType = bgTypeSelect.value;
+          
+          if (bgType === 'color') {
+            ctx.fillStyle = bgColorInput.value;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          } else if (bgType === 'image' && bgImage) {
+            const scale = Math.max(
+              canvas.width / bgImage.width,
+              canvas.height / bgImage.height
+            );
+            const x = (canvas.width - bgImage.width * scale) / 2;
+            const y = (canvas.height - bgImage.height * scale) / 2;
+            
+            ctx.drawImage(
+              bgImage,
+              x, y,
+              bgImage.width * scale,
+              bgImage.height * scale
+            );
+          }
+          
+          ctx.drawImage(noBgImg, 0, 0);
+          resultImage.src = canvas.toDataURL('image/png');
+          resultImage.classList.remove('hidden');
+          downloadBtn.href = canvas.toDataURL('image/png');
+          downloadBtn.classList.remove('hidden');
+          loading.classList.add('hidden');
+          showNotification("Background removed successfully!", "success");
+        };
+      } catch (err) {
+        console.error("Error:", err);
+        showNotification("Error processing image: " + err.message, "error");
+        loading.classList.add('hidden');
+      }
+    }
+    
+    // Size Reducer Feature
+    const reducerUpload = document.getElementById('reducerUpload');
+    const reducerOriginalImage = document.getElementById('reducerOriginalImage');
+    const reducerOriginalContainer = document.getElementById('reducerOriginalContainer');
+    const reducerResultImage = document.getElementById('reducerResultImage');
+    const reducerResultContainer = document.getElementById('reducerResultContainer');
+    const reducerProcessBtn = document.getElementById('reducerProcessBtn');
+    const reducerDownloadBtn = document.getElementById('reducerDownloadBtn');
+    const reducerLoading = document.getElementById('reducerLoading');
+    const qualityRange = document.getElementById('qualityRange');
+    const qualityValue = document.getElementById('qualityValueDisplay');
+    const originalSizeLabel = document.getElementById('originalSize');
+    const reducedSizeLabel = document.getElementById('reducedSize');
+    
+    reducerUpload.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        reducerOriginalImage.src = event.target.result;
+        reducerOriginalImage.classList.remove('hidden');
+        reducerOriginalContainer.querySelector('.placeholder-text').classList.add('hidden');
+        reducerProcessBtn.disabled = false;
+        
+        // Show original file size
+        const sizeInKB = (file.size / 1024).toFixed(2);
+        originalSizeLabel.textContent = `Original size: ${sizeInKB} KB`;
+      };
+      reader.readAsDataURL(file);
+    });
+    
+    qualityRange.addEventListener('input', function() {
+      qualityValue.textContent = this.value;
+    });
+    
+    function reduceImageSize() {
+      const img = new Image();
+      img.src = reducerOriginalImage.src;
+      
+      reducerLoading.classList.remove('hidden');
+      reducerResultImage.classList.add('hidden');
+      reducerResultContainer.querySelector('.placeholder-text').classList.add('hidden');
+      
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        
+        ctx.drawImage(img, 0, 0);
+        
+        const quality = parseInt(qualityRange.value) / 100;
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        
+        // Calculate reduced size
+        const base64Length = dataUrl.length - 'data:image/jpeg;base64,'.length;
+        const sizeInBytes = base64Length * 0.75; // Approximate
+        const sizeInKB = (sizeInBytes / 1024).toFixed(2);
+        
+        reducerResultImage.src = dataUrl;
+        reducerResultImage.classList.remove('hidden');
+        reducerDownloadBtn.href = dataUrl;
+        reducerDownloadBtn.classList.remove('hidden');
+        reducedSizeLabel.textContent = `Reduced size: ${sizeInKB} KB`;
+        reducerLoading.classList.add('hidden');
+        showNotification("Image size reduced successfully!", "success");
+      };
+    }
+    
+    // Initialize
+    toggleBackgroundOptions();
+  </script>
+</body>
+</html>
