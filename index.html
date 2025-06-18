@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FixMyPic - Online Image Tools</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <script
+    src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+    type="module"
+  ></script>
   <style>
     :root {
       --primary: #4a6fa5;
@@ -185,7 +189,14 @@
     </div>
 
     <div class="feature-card" onclick="window.location.href='signature.html'">
-      <div class="feature-icon"><i class="fas fa-signature"></i></div>
+      <dotlottie-player
+        src="https://lottie.host/763c0b76-c1a6-4e05-b0f8-23b58fa63e6f/hFM7nLOhWw.lottie"
+        background="transparent"
+        speed="1"
+        style="width: 100px; height: 100px; margin: 0 auto 10px;"
+        loop
+        autoplay
+      ></dotlottie-player>
       <h3 class="feature-title">Signature Tool</h3>
       <p>Digitize and resize your signature</p>
     </div>
