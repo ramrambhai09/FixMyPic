@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FixMyPic - File Converter</title>
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --secondary: #166088;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --bg-color: #f5f7fa;
+      --text-color: #343a40;
+      --panel-bg: #ffffff;
+      --panel-border: #e9ecef;
+      --header-bg: linear-gradient(135deg, var(--primary), var(--secondary));
+      --placeholder-color: #999;
+    }
+
+    .dark-mode {
+      --bg-color: #1a1a1a;
+      --text-color: #f8f9fa;
+      --panel-bg: #2d2d2d;
+      --panel-border: #444;
+      --header-bg: linear-gradient(135deg, #2c3e50, #4a6fa5);
+      --placeholder-color: #aaa;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 0;
+      background: var(--header-bg);
+      color: white;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+    }
+
+    .app-description {
+      max-width: 600px;
+      margin: 10px auto 0;
+      opacity: 0.9;
+    }
+
+    .converter-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .converter-card {
+      background: var(--panel-bg);
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border: 1px solid var(--panel-border);
+      transition: all 0.3s ease;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .converter-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .converter-card i {
+      font-size: 40px;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+
+    .converter-card h2 {
+      margin: 0 0 10px;
+      color: var(--primary);
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.1);
+    }
+
+    .theme-toggle i {
+      color: white;
+      font-size: 20px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 10px;
+      }
+      header {
+        padding: 20px 0;
+        border-radius: 0;
+      }
+      .converter-card {
+        padding: 20px;
+      }
+      .theme-toggle {
+        top: 10px;
+        right: 10px;
+        width: 35px;
+        height: 35px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+      </button>
+      <h1>File Converter</h1>
+      <p class="app-description">Convert between different file formats easily</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="converter-options">
+
+      <div class="converter-card" onclick="window.location.href='pdftojpg.html'">
+        <i class="fas fa-file-pdf"></i>
+        <h2>PDF to JPG</h2>
+        <p>Convert PDF to images</p>
+      </div>
+
+      <div class="converter-card" onclick="window.location.href='jpgtopdf.html'">
+        <i class="fas fa-file-image"></i>
+        <h2>JPG to PDF</h2>
+        <p>Images to PDF document</p>
+      </div>
+
+      <div class="converter-card" onclick="window.location.href='mergepdf.html'">
+        <i class="fas fa-compress-alt"></i>
+        <h2>Merge PDF</h2>
+        <p>Combine multiple PDF files</p>
+      </div>
+
+      <!-- <div class="converter-card" onclick="window.location.href='splitpdf.html'">
+        <i class="fas fa-columns"></i>
+        <h2>Split PDF</h2>
+        <p>Separate pages from PDF</p>
+      </div> -->
+
+      <div class="converter-card" onclick="window.location.href='compresspdf.html'">
+        <i class="fas fa-compress"></i>
+        <h2>Compress PDF</h2>
+        <p>Reduce file size</p>
+      </div>
+
+      <div class="converter-card" onclick="window.location.href='pdftotext.html'">
+        <i class="fas fa-file-word"></i>
+        <h2>PDF to Text</h2>
+        <p>your file in pdf to text</p>
+      </div>
+
+      <div class="converter-card" onclick="window.location.href='converttozip.html'">
+        <i class="fas fa-file-word"></i>
+        <h2>covert to zip</h2>
+        <p>Convert to ZIP</p>
+      </div>
+
+
+      <div class="converter-card" onclick="window.location.href='pdftoppt.html'">
+        <i class="fas fa-file-powerpoint"></i>
+        <h2>PDF to PPT</h2>
+        <p>Slides from PDF</p>
+      </div>
+
+      <div class="converter-card" onclick="window.location.href='wordtopdf.html'">
+        <i class="fas fa-file-excel"></i>
+        <h2>WORD to PDF</h2>
+        <p>Extract data from PDF (Doc To Pdf)</p>
+      </div>
+
+      <div class="converter-card" onclick="window.location.href='imagetojpg.html'">
+        <i class="fas fa-file-excel"></i>
+        <h2>Image To Jpg</h2>
+        <p>convert your image to pdf</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    let darkMode = localStorage.getItem('darkMode') === 'true';
+
+    updateTheme();
+
+    themeToggle.addEventListener('click', () => {
+      darkMode = !darkMode;
+      localStorage.setItem('darkMode', darkMode);
+      updateTheme();
+    });
+
+    function updateTheme() {
+      if (darkMode) {
+        document.body.classList.add('dark-mode');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+      } else {
+        document.body.classList.remove('dark-mode');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+      }
+    }
+  </script>
+</body>
+</html>
