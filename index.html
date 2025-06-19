@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FixMyPic - Online Image Tools</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-  <script
-    src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
-    type="module"
-  ></script>
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
   <style>
     :root {
       --primary: #4a6fa5;
@@ -21,7 +18,7 @@
       --panel-border: #e9ecef;
     }
 
-    .dark-mode {
+    .dark-mode {  
       --bg-color: #1a1a1a;
       --text-color: #f8f9fa;
       --panel-bg: #2d2d2d;
@@ -136,10 +133,32 @@
       margin-bottom: 5px;
     }
 
+    @keyframes cameraDrop {
+      0% { top: -100px; opacity: 0; }
+      100% { top: -10px; opacity: 1; }
+    }
+
+    @keyframes flash {
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes showFrame {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
     @media (max-width: 768px) {
       h1 { font-size: 1.6rem; }
       .app-description { font-size: 0.95rem; }
     }
+
+    .feature-card video:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
   </style>
 </head>
 <body>
@@ -182,42 +201,77 @@
 
 <div class="container">
   <div class="features-grid">
-    <div class="feature-card" onclick="window.location.href='passport-photo.html'">
-      <div class="feature-icon"><i class="fas fa-id-card"></i></div>
-      <h3 class="feature-title">Passport Photo Tool</h3>
-      <p>Create perfectly sized passport photos</p>
-    </div>
 
+    <!-- Passport Photo Animation Card -->
+    <div class="feature-card" onclick="window.location.href='passport-photo.html'">
+  <div class="container" style="position: relative; width: 60px; height: 80px; margin: 0 auto 10px;">
+    <div class="camera" style="width: 30px; height: 18px; background: #333; border-radius: 4px; position: absolute; top: -25px; left: 15px; animation: cameraDrop 1.5s forwards; z-index: 2;">
+      <div style="width: 8px; height: 8px; background: #aaa; border-radius: 50%; position: absolute; top: 5px; left: 10px;"></div>
+    </div>
+    <div class="flash" style="position: absolute; width: 100%; height: 100%; background: white; opacity: 0; z-index: 3; animation: flash 0.5s 1.6s forwards;"></div>
+    <div class="frame" style="width: 60px; height: 80px; border: 2px solid #007BFF; border-radius: 4px; background: white; position: absolute; top: 0; left: 0; box-shadow: 0 0 4px rgba(0, 0, 0, 0.2); opacity: 0; animation: showFrame 0.8s 2.2s forwards; overflow: hidden;">
+      <img src="1.png" alt="Passport Photo" style="width: 100%; height: 100%; object-fit: cover;" />
+    </div>
+  </div>
+  <h3 class="feature-title">Passport Photo Tool</h3>
+  <p>Create perfectly sized passport photos</p>
+</div>
+
+
+
+    <!-- Signature Tool -->
     <div class="feature-card" onclick="window.location.href='signature.html'">
       <dotlottie-player
         src="https://lottie.host/763c0b76-c1a6-4e05-b0f8-23b58fa63e6f/hFM7nLOhWw.lottie"
         background="transparent"
         speed="1"
         style="width: 100px; height: 100px; margin: 0 auto 10px;"
-        loop
-        autoplay
+        loop autoplay
       ></dotlottie-player>
       <h3 class="feature-title">Signature Tool</h3>
       <p>Digitize and resize your signature</p>
     </div>
 
+    <!-- Background Remover -->
     <div class="feature-card" onclick="window.location.href='bg-remover.html'">
-      <div class="feature-icon"><i class="fas fa-image"></i></div>
+      <dotlottie-player
+        src="https://lottie.host/f18b13ab-207c-4fc4-af09-ba28dac49c18/x26AmI09cX.lottie"
+        background="transparent"
+        speed="1"
+        style="width: 100px; height: 100px; margin: 0 auto 10px;"
+        loop autoplay
+      ></dotlottie-player>
       <h3 class="feature-title">Background Remover</h3>
       <p>Remove image backgrounds easily</p>
     </div>
 
+    <!-- Converter -->
+    <!-- Document Converter with MP4 Animation -->
+<div class="feature-card" onclick="window.location.href='converter.html'">
+  <video autoplay loop muted playsinline style="width: 100px; height: 100px; margin: 0 auto 10px; border-radius: 8px;">
+    <source src="2.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  <h3 class="feature-title">Document Converter</h3>
+  <p>Convert PDF ⇄ Word</p>
+</div>
+
+
+
+
+    <!-- Image Size Reducer -->
     <div class="feature-card" onclick="window.location.href='image-reducer.html'">
-      <div class="feature-icon"><i class="fas fa-compress-alt"></i></div>
+      <dotlottie-player
+        src="https://lottie.host/91d8fab5-4dd0-473f-b2a4-fafb3ca19173/4vfXNbLX4W.lottie"
+        background="transparent"
+        speed="1"
+        style="width: 100px; height: 100px; margin: 0 auto 10px;"
+        loop autoplay
+      ></dotlottie-player>
       <h3 class="feature-title">Image Size Reducer</h3>
-      <p>Compress images without losing quality</p>
+      <p>Reduce image file size easily</p>
     </div>
 
-    <div class="feature-card" onclick="window.location.href='converter.html'">
-      <div class="feature-icon"><i class="fas fa-file-pdf"></i></div>
-      <h3 class="feature-title">Converter</h3>
-      <p>Convert PDF ⇄ JPG</p>
-    </div>
   </div>
 </div>
 
